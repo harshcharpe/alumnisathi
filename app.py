@@ -1,6 +1,17 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
-from db import alumni_collection, jobs_collection, events_collection # Ensure db.py has these
+from db import (
+    achievements_collection,
+    alumni_collection,
+    events_collection,
+    giving_collection,
+    jobs_collection,
+    knowledge_collection,
+    mentorship_collection,
+    networking_collection,
+    notifications_collection,
+    privacy_collection,
+)
 from bson.objectid import ObjectId 
 
 import os
@@ -29,6 +40,190 @@ app.config['SECRET_KEY'] = secret_key
 bcrypt = Bcrypt(app)
 
 
+def demo_jobs():
+    now = datetime.now()
+    return [
+        {
+            "_id": "demo-job-1",
+            "title": "Frontend Developer Intern",
+            "company": "CampusBridge Labs",
+            "location": "Remote",
+            "description": "Build polished student and alumni dashboards with HTML, CSS, JavaScript, and Flask APIs.",
+            "postedBy": "demo",
+            "postDate": now - timedelta(days=2),
+        },
+        {
+            "_id": "demo-job-2",
+            "title": "Data Analyst",
+            "company": "Nexa Analytics",
+            "location": "Bengaluru",
+            "description": "Turn placement, mentorship, and event data into useful reports for the alumni office.",
+            "postedBy": "demo",
+            "postDate": now - timedelta(days=5),
+        },
+    ]
+
+
+def demo_events():
+    now = datetime.now()
+    return [
+        {
+            "_id": "demo-event-1",
+            "title": "Alumni Career Night",
+            "date": now + timedelta(days=14),
+            "location": "Main Auditorium",
+            "description": "Meet seniors from engineering, product, design, and startup roles.",
+            "postedBy": "demo",
+            "postDate": now,
+        },
+        {
+            "_id": "demo-event-2",
+            "title": "Founders Roundtable",
+            "date": now + timedelta(days=30),
+            "location": "Innovation Cell",
+            "description": "A small-format meetup for alumni founders and students exploring startups.",
+            "postedBy": "demo",
+            "postDate": now,
+        },
+    ]
+
+
+def demo_networking():
+    return [
+        {
+            "_id": "demo-network-1",
+            "fullName": "Priya Sharma",
+            "graduationYear": "2018",
+            "industry": "Software Engineering",
+            "location": "Bengaluru",
+            "interests": ["frontend", "mentorship", "startups"],
+            "bio": "Senior frontend engineer helping students build production-ready portfolios.",
+            "visibility": "public",
+        },
+        {
+            "_id": "demo-network-2",
+            "fullName": "Rahul Mehta",
+            "graduationYear": "2015",
+            "industry": "Marketing",
+            "location": "Mumbai",
+            "interests": ["growth", "branding", "career advice"],
+            "bio": "Growth lead mentoring alumni who want to move into product marketing.",
+            "visibility": "public",
+        },
+    ]
+
+
+def demo_knowledge():
+    now = datetime.now()
+    return [
+        {
+            "_id": "demo-knowledge-1",
+            "title": "How to prepare for product interviews",
+            "category": "Career",
+            "content": "Break the interview into product sense, execution, analytics, and communication rounds.",
+            "author": "Anjali Verma",
+            "createdAt": now - timedelta(days=1),
+        },
+        {
+            "_id": "demo-knowledge-2",
+            "title": "Webinar: Building your first startup team",
+            "category": "Webinar",
+            "content": "A practical session on finding co-founders, validating ideas, and talking to users.",
+            "author": "Founders Club",
+            "createdAt": now - timedelta(days=4),
+        },
+    ]
+
+
+def demo_mentorship():
+    return [
+        {
+            "_id": "demo-mentor-1",
+            "mentorName": "Dr. Kavita Rao",
+            "expertise": "Higher Studies",
+            "availability": "Saturdays",
+            "description": "Guidance for MS, PhD, scholarships, and research profiles.",
+            "createdAt": datetime.now(),
+        }
+    ]
+
+
+def demo_achievements():
+    return [
+        {
+            "_id": "demo-achievement-1",
+            "name": "Amit Singh",
+            "title": "Forbes 30 Under 30",
+            "description": "Recognized for work in accessible education technology.",
+            "year": "2026",
+            "createdAt": datetime.now(),
+        }
+    ]
+
+
+def demo_giving():
+    return [
+        {
+            "_id": "demo-giving-1",
+            "title": "Student Scholarship Fund",
+            "goal": 500000,
+            "raised": 185000,
+            "description": "Support need-based scholarships for current students.",
+            "createdAt": datetime.now(),
+        }
+    ]
+
+
+def demo_notifications():
+    now = datetime.now()
+    return [
+        {"_id": "demo-note-1", "message": "New alumni career night announced.", "type": "event", "createdAt": now},
+        {"_id": "demo-note-2", "message": "2 new career opportunities posted this week.", "type": "career", "createdAt": now},
+        {"_id": "demo-note-3", "message": "Priya Sharma is available for mentorship.", "type": "networking", "createdAt": now},
+    ]
+
+
+def serialize_document(document):
+    item = dict(document)
+    if "_id" in item:
+        item["_id"] = str(item["_id"])
+    for key, value in list(item.items()):
+        if isinstance(value, datetime):
+            item[key] = value.isoformat()
+    return item
+
+
+def format_date(value):
+    if isinstance(value, datetime):
+        return value.strftime("%Y-%m-%d")
+    if value:
+        return str(value)[:10]
+    return datetime.now().strftime("%Y-%m-%d")
+
+
+def safe_object_id(value):
+    try:
+        return ObjectId(value)
+    except Exception:
+        return value
+
+
+def split_interests(value):
+    if isinstance(value, list):
+        return [item.strip() for item in value if str(item).strip()]
+    return [item.strip() for item in str(value or "").split(",") if item.strip()]
+
+
+def collection_items(collection, sort_key=None, sort_direction=-1, fallback=None, query=None):
+    cursor = collection.find(query or {})
+    if sort_key:
+        cursor = cursor.sort(sort_key, sort_direction)
+    items = [serialize_document(item) for item in cursor]
+    if not items and fallback:
+        items = [serialize_document(item) for item in fallback()]
+    return items
+
+
 # --- 1. UTILITY: JWT Token Required Decorator (Protected Routes Ke Liye) ---
 def token_required(f):
     @wraps(f)
@@ -46,7 +241,9 @@ def token_required(f):
         try:
             # Token ko decode karein
             data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
-            current_alumni = alumni_collection.find_one({'_id': ObjectId(data['user_id'])})
+            current_alumni = alumni_collection.find_one({'_id': safe_object_id(data['user_id'])})
+            if not current_alumni:
+                return jsonify({'msg': 'User not found!'}), 401
             
         except Exception as e:
             return jsonify({'msg': 'Token is invalid or expired!'}), 401
@@ -61,8 +258,14 @@ def token_required(f):
 
 @app.route('/', methods=['GET'])
 def home():
+    """Serve the prototype UI."""
+    return send_from_directory(app.root_path, 'aluliu.html')
+
+
+@app.route('/api/health', methods=['GET'])
+def health():
     """Server status check ke liye basic route."""
-    return "Alumni Sathi Flask Backend (COMPLETE) is Running!", 200
+    return jsonify({"msg": "Alumni Sathi Flask Backend is running"}), 200
 
 @app.route('/api/alumni/register', methods=['POST'])
 def register_alumni():
@@ -87,6 +290,10 @@ def register_alumni():
             "email": email,
             "graduationYear": data.get('graduationYear'),
             "password": hashed_password, 
+            "industry": data.get('industry', 'Not specified'),
+            "location": data.get('location', 'Not specified'),
+            "interests": split_interests(data.get('interests', 'networking, mentorship')),
+            "visibility": data.get('visibility', 'public'),
             "message": data.get('message', ''),
             "registrationDate": datetime.now()
         }
@@ -111,7 +318,7 @@ def login_alumni():
 
     alumni = alumni_collection.find_one({"email": email})
 
-    if not alumni or not bcrypt.check_password_hash(alumni['password'], password):
+    if not alumni or not alumni.get('password') or not bcrypt.check_password_hash(alumni['password'], password):
         return jsonify({"msg": "Invalid credentials"}), 401
 
     try:
@@ -143,10 +350,169 @@ def get_user_profile(current_alumni):
         "fullName": current_alumni['fullName'],
         "email": current_alumni['email'],
         "graduationYear": current_alumni['graduationYear'],
-        "registrationDate": current_alumni['registrationDate'].strftime("%Y-%m-%d")
+        "industry": current_alumni.get('industry', 'Not specified'),
+        "location": current_alumni.get('location', 'Not specified'),
+        "interests": current_alumni.get('interests', []),
+        "visibility": current_alumni.get('visibility', 'public'),
+        "registrationDate": format_date(current_alumni.get('registrationDate'))
     }
 
     return jsonify(profile_data), 200
+
+
+@app.route('/api/user/profile', methods=['PUT'])
+@token_required
+def update_user_profile(current_alumni):
+    data = request.json or {}
+    updates = {
+        "fullName": data.get("fullName", current_alumni.get("fullName")),
+        "graduationYear": data.get("graduationYear", current_alumni.get("graduationYear")),
+        "industry": data.get("industry", current_alumni.get("industry", "Not specified")),
+        "location": data.get("location", current_alumni.get("location", "Not specified")),
+        "interests": split_interests(data.get("interests", current_alumni.get("interests", []))),
+        "visibility": data.get("visibility", current_alumni.get("visibility", "public")),
+    }
+    alumni_collection.update_one({"_id": current_alumni["_id"]}, {"$set": updates})
+    privacy_collection.update_one(
+        {"alumniId": str(current_alumni["_id"])},
+        {"$set": {"visibility": updates["visibility"], "updatedAt": datetime.now()}},
+        upsert=True,
+    )
+    return jsonify({"msg": "Profile updated successfully.", "profile": serialize_document(updates)}), 200
+
+
+# --- FEATURE ROUTES: Smart Networking, Knowledge, Mentorship, Achievements, Giving ---
+
+@app.route('/api/networking', methods=['GET'])
+def get_networking_directory():
+    alumni_profiles = [
+        serialize_document(alumni)
+        for alumni in alumni_collection.find({"visibility": "public"})
+    ]
+    for profile in alumni_profiles:
+        profile.pop("password", None)
+    curated_profiles = collection_items(networking_collection, fallback=demo_networking)
+    return jsonify(alumni_profiles + curated_profiles), 200
+
+
+@app.route('/api/networking/connect', methods=['POST'])
+@token_required
+def create_connection_request(current_alumni):
+    data = request.json or {}
+    target_name = data.get("targetName", "selected alumnus")
+    notifications_collection.insert_one({
+        "message": f"{current_alumni['fullName']} requested to connect with {target_name}.",
+        "type": "networking",
+        "createdAt": datetime.now(),
+        "userId": str(current_alumni["_id"]),
+    })
+    return jsonify({"msg": f"Connection request sent to {target_name}."}), 201
+
+
+@app.route('/api/knowledge', methods=['GET'])
+def get_knowledge_posts():
+    return jsonify(collection_items(knowledge_collection, "createdAt", -1, demo_knowledge)), 200
+
+
+@app.route('/api/knowledge', methods=['POST'])
+@token_required
+def create_knowledge_post(current_alumni):
+    data = request.json or {}
+    required_fields = ["title", "category", "content"]
+    if not all(data.get(field) for field in required_fields):
+        return jsonify({"msg": "Title, category, and content are required."}), 400
+    post = {
+        "title": data["title"],
+        "category": data["category"],
+        "content": data["content"],
+        "author": current_alumni["fullName"],
+        "authorId": str(current_alumni["_id"]),
+        "createdAt": datetime.now(),
+    }
+    knowledge_collection.insert_one(post)
+    return jsonify({"msg": "Knowledge post shared successfully."}), 201
+
+
+@app.route('/api/mentorship', methods=['GET'])
+def get_mentorship_programs():
+    return jsonify(collection_items(mentorship_collection, "createdAt", -1, demo_mentorship)), 200
+
+
+@app.route('/api/mentorship', methods=['POST'])
+@token_required
+def create_mentorship_program(current_alumni):
+    data = request.json or {}
+    required_fields = ["expertise", "availability", "description"]
+    if not all(data.get(field) for field in required_fields):
+        return jsonify({"msg": "Expertise, availability, and description are required."}), 400
+    mentorship_collection.insert_one({
+        "mentorName": current_alumni["fullName"],
+        "expertise": data["expertise"],
+        "availability": data["availability"],
+        "description": data["description"],
+        "createdAt": datetime.now(),
+    })
+    return jsonify({"msg": "Mentorship offer added successfully."}), 201
+
+
+@app.route('/api/achievements', methods=['GET'])
+def get_achievements():
+    return jsonify(collection_items(achievements_collection, "createdAt", -1, demo_achievements)), 200
+
+
+@app.route('/api/achievements', methods=['POST'])
+@token_required
+def create_achievement(current_alumni):
+    data = request.json or {}
+    required_fields = ["name", "title", "description", "year"]
+    if not all(data.get(field) for field in required_fields):
+        return jsonify({"msg": "Name, title, description, and year are required."}), 400
+    achievements_collection.insert_one({
+        "name": data["name"],
+        "title": data["title"],
+        "description": data["description"],
+        "year": data["year"],
+        "createdAt": datetime.now(),
+    })
+    return jsonify({"msg": "Achievement added to the board."}), 201
+
+
+@app.route('/api/giving', methods=['GET'])
+def get_giving_campaigns():
+    return jsonify(collection_items(giving_collection, "createdAt", -1, demo_giving)), 200
+
+
+@app.route('/api/giving/<campaign_id>/donate', methods=['POST'])
+@token_required
+def donate_to_campaign(current_alumni, campaign_id):
+    data = request.json or {}
+    amount = int(data.get("amount", 0) or 0)
+    if amount <= 0:
+        return jsonify({"msg": "Donation amount must be greater than zero."}), 400
+    try:
+        query = {"_id": ObjectId(campaign_id)}
+    except Exception:
+        query = {"_id": campaign_id}
+    result = giving_collection.update_one(query, {"$inc": {"raised": amount}})
+    if result.matched_count == 0:
+        giving_collection.insert_one({
+            "title": "Community Giving",
+            "goal": 100000,
+            "raised": amount,
+            "description": "General contribution from alumni.",
+            "createdAt": datetime.now(),
+        })
+    notifications_collection.insert_one({
+        "message": f"{current_alumni['fullName']} contributed Rs. {amount} to Give Back.",
+        "type": "giving",
+        "createdAt": datetime.now(),
+    })
+    return jsonify({"msg": "Thank you for supporting the community."}), 200
+
+
+@app.route('/api/notifications', methods=['GET'])
+def get_notifications():
+    return jsonify(collection_items(notifications_collection, "createdAt", -1, demo_notifications)), 200
 
 
 # --- 3. STATS ROUTE ---
@@ -155,12 +521,18 @@ def get_stats():
     """Database se real-time statistics fetch karta hai."""
     try:
         active_alumni_count = alumni_collection.count_documents({})
+        jobs_count = jobs_collection.count_documents({})
+        events_count = events_collection.count_documents({})
+        knowledge_count = knowledge_collection.count_documents({})
+        achievements_count = achievements_collection.count_documents({})
 
         stats_data = {
-            "activeAlumni": active_alumni_count, 
-            "companiesConnected": jobs_collection.count_documents({}), 
+            "activeAlumni": max(active_alumni_count, 120), 
+            "companiesConnected": max(jobs_count, len(demo_jobs())), 
             "jobPlacements": 850, 
-            "eventsHosted": events_collection.count_documents({}) 
+            "eventsHosted": max(events_count, len(demo_events())),
+            "knowledgePosts": max(knowledge_count, len(demo_knowledge())),
+            "achievements": max(achievements_count, len(demo_achievements()))
         }
         
         return jsonify(stats_data), 200
@@ -193,10 +565,9 @@ def create_job(current_alumni):
 
 @app.route('/api/jobs', methods=['GET'])
 def get_all_jobs():
-    jobs_list = []
-    for job in jobs_collection.find().sort("postDate", -1):
-        job['_id'] = str(job['_id'])
-        jobs_list.append(job)
+    jobs_list = [serialize_document(job) for job in jobs_collection.find().sort("postDate", -1)]
+    if not jobs_list:
+        jobs_list = [serialize_document(job) for job in demo_jobs()]
     return jsonify(jobs_list), 200
 
 
@@ -228,13 +599,14 @@ def create_event(current_alumni):
 
 @app.route('/api/events', methods=['GET'])
 def get_all_events():
-    events_list = []
-    for event in events_collection.find({"date": {"$gte": datetime.now()}}).sort("date", 1):
-        event['_id'] = str(event['_id'])
-        event['date'] = event['date'].isoformat() 
-        events_list.append(event)
+    events_list = [
+        serialize_document(event)
+        for event in events_collection.find({"date": {"$gte": datetime.now()}}).sort("date", 1)
+    ]
+    if not events_list:
+        events_list = [serialize_document(event) for event in demo_events()]
     return jsonify(events_list), 200
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True, use_reloader=False)
