@@ -398,6 +398,125 @@
         }
         /* --- End new style --- */
 
+        .feature-workspace {
+            position: relative;
+            z-index: 1;
+            padding: 5rem 2rem;
+            background: rgba(0, 0, 0, 0.18);
+        }
+
+        .workspace-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-tabs {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .feature-tab {
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 999px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .feature-tab.active,
+        .feature-tab:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        .workspace-panel {
+            display: none;
+        }
+
+        .workspace-panel.active {
+            display: block;
+        }
+
+        .workspace-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.8fr);
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .feature-card-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1rem;
+        }
+
+        .data-card,
+        .feature-form {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 1.25rem;
+            color: white;
+        }
+
+        .data-card h3,
+        .feature-form h3 {
+            margin-bottom: 0.6rem;
+            color: #dce8ff;
+        }
+
+        .data-card p,
+        .data-card small {
+            color: rgba(255, 255, 255, 0.82);
+            line-height: 1.5;
+        }
+
+        .tag-row {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 0.8rem;
+        }
+
+        .tag {
+            padding: 0.35rem 0.6rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.14);
+            font-size: 0.8rem;
+        }
+
+        .feature-form input,
+        .feature-form textarea,
+        .feature-form select {
+            width: 100%;
+            margin-bottom: 0.8rem;
+            padding: 0.85rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .feature-form textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        .feature-form option {
+            color: #222;
+        }
+
+        @media (max-width: 900px) {
+            .workspace-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
 
         /* Testimonials Section */
         .testimonials {
@@ -804,50 +923,166 @@
         <div class="features-container">
             <h2 class="section-title">Powerful Features for Alumni Engagement</h2>
             <div class="features-grid">
-                <div class="feature-card">
+                <div class="feature-card" data-feature="networking">
                     <div class="feature-icon">👥</div>
                     <h3>Smart Networking</h3>
                     <p>Connect with alumni based on interests, location, industry, and graduation year. Build meaningful professional relationships.</p>
                 </div>
-                <div class="feature-card">
+                <div class="feature-card" data-feature="career">
                     <div class="feature-icon">💼</div>
                     <h3>Career Hub</h3>
                     <p>Access exclusive job postings, mentorship programs, and career guidance from successful alumni in your field.</p>
                 </div>
-                <div class="feature-card">
+                <div class="feature-card" data-feature="knowledge">
                     <div class="feature-icon">📚</div>
                     <h3>Knowledge Sharing</h3>
                     <p>Participate in webinars, workshops, and discussions. Share your expertise and learn from others.</p>
                 </div>
-                <div class="feature-card">
+                <div class="feature-card" data-feature="events">
                     <div class="feature-icon">🎯</div>
                     <h3>Events & Reunions</h3>
                     <p>Stay updated on alumni events, reunions, and networking meetups. Never miss an opportunity to reconnect.</p>
                 </div>
-                <div class="feature-card">
+                <div class="feature-card" data-feature="achievements">
                     <div class="feature-icon">🏆</div>
                     <h3>Achievement Board</h3>
                     <p>Celebrate and showcase alumni achievements, awards, and milestones. Inspire the next generation.</p>
                 </div>
-                <div class="feature-card">
+                <div class="feature-card" data-feature="giving">
                     <div class="feature-icon">💝</div>
                     <h3>Give Back</h3>
                     <p>Support your institution through donations, scholarships, and mentoring current students.</p>
                 </div>
-                <div class="feature-card">
+                <div class="feature-card" data-feature="notifications">
                     <div class="feature-icon">🔔</div>
                     <h3>Smart Notifications</h3>
                     <p>Get personalized updates about opportunities, events, and connections relevant to your interests.</p>
                 </div>
-                <div class="feature-card">
+                <div class="feature-card" data-feature="mobile">
                     <div class="feature-icon">📱</div>
                     <h3>Mobile Ready</h3>
                     <p>Access the platform anywhere, anytime. Stay connected on the go with our responsive design.</p>
                 </div>
-                <div class="feature-card">
+                <div class="feature-card" data-feature="privacy">
                     <div class="feature-icon">🔒</div>
                     <h3>Privacy First</h3>
                     <p>Control your profile visibility and data. Your privacy and security are our top priorities.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="feature-workspace" id="feature-workspace">
+        <div class="workspace-container">
+            <h2 class="section-title">Alumni Sathi Feature Workspace</h2>
+            <div class="feature-tabs">
+                <button class="feature-tab active" data-panel="networking">Smart Networking</button>
+                <button class="feature-tab" data-panel="career">Career Hub</button>
+                <button class="feature-tab" data-panel="knowledge">Knowledge Sharing</button>
+                <button class="feature-tab" data-panel="mentorship">Mentorship</button>
+                <button class="feature-tab" data-panel="achievements">Achievement Board</button>
+                <button class="feature-tab" data-panel="giving">Give Back</button>
+                <button class="feature-tab" data-panel="notifications">Notifications</button>
+                <button class="feature-tab" data-panel="privacy">Privacy</button>
+            </div>
+
+            <div class="workspace-panel active" id="panel-networking">
+                <div class="workspace-layout">
+                    <div class="feature-card-list" id="networkingList"></div>
+                    <div class="feature-form">
+                        <h3>Improve Your Matches</h3>
+                        <input id="profileIndustry" placeholder="Industry, e.g. Software Engineering">
+                        <input id="profileLocation" placeholder="Location, e.g. Bengaluru">
+                        <input id="profileInterests" placeholder="Interests separated by commas">
+                        <select id="profileVisibility">
+                            <option value="public">Public profile</option>
+                            <option value="private">Private profile</option>
+                        </select>
+                        <button class="btn btn-primary" onclick="saveProfileSettings()">Save Profile</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="workspace-panel" id="panel-career">
+                <div class="workspace-layout">
+                    <div class="feature-card-list" id="careerList"></div>
+                    <form class="feature-form" id="jobPostForm">
+                        <h3>Post a Job</h3>
+                        <input id="jobTitle" placeholder="Job title" required>
+                        <input id="jobCompany" placeholder="Company" required>
+                        <input id="jobLocation" placeholder="Location" required>
+                        <textarea id="jobDescription" placeholder="Job description" required></textarea>
+                        <button class="btn btn-primary" type="submit">Post Job</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="workspace-panel" id="panel-knowledge">
+                <div class="workspace-layout">
+                    <div class="feature-card-list" id="knowledgeList"></div>
+                    <form class="feature-form" id="knowledgeForm">
+                        <h3>Share Knowledge</h3>
+                        <input id="knowledgeTitle" placeholder="Title" required>
+                        <input id="knowledgeCategory" placeholder="Category, e.g. Webinar, Career" required>
+                        <textarea id="knowledgeContent" placeholder="Write your insight, guide, or webinar note" required></textarea>
+                        <button class="btn btn-primary" type="submit">Share Post</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="workspace-panel" id="panel-mentorship">
+                <div class="workspace-layout">
+                    <div class="feature-card-list" id="mentorshipList"></div>
+                    <form class="feature-form" id="mentorshipForm">
+                        <h3>Offer Mentorship</h3>
+                        <input id="mentorExpertise" placeholder="Expertise" required>
+                        <input id="mentorAvailability" placeholder="Availability" required>
+                        <textarea id="mentorDescription" placeholder="How can you help students or alumni?" required></textarea>
+                        <button class="btn btn-primary" type="submit">Offer Mentorship</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="workspace-panel" id="panel-achievements">
+                <div class="workspace-layout">
+                    <div class="feature-card-list" id="achievementList"></div>
+                    <form class="feature-form" id="achievementForm">
+                        <h3>Add Achievement</h3>
+                        <input id="achievementName" placeholder="Alumni name" required>
+                        <input id="achievementTitle" placeholder="Achievement title" required>
+                        <input id="achievementYear" placeholder="Year" required>
+                        <textarea id="achievementDescription" placeholder="Achievement details" required></textarea>
+                        <button class="btn btn-primary" type="submit">Publish Achievement</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="workspace-panel" id="panel-giving">
+                <div class="workspace-layout">
+                    <div class="feature-card-list" id="givingList"></div>
+                    <div class="feature-form">
+                        <h3>Make a Contribution</h3>
+                        <input id="donationAmount" type="number" min="1" placeholder="Amount in INR">
+                        <button class="btn btn-primary" onclick="donateToFirstCampaign()">Donate to First Campaign</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="workspace-panel" id="panel-notifications">
+                <div class="feature-card-list" id="notificationList"></div>
+            </div>
+
+            <div class="workspace-panel" id="panel-privacy">
+                <div class="workspace-layout">
+                    <div class="feature-card-list" id="privacySummary"></div>
+                    <div class="feature-form">
+                        <h3>Privacy Controls</h3>
+                        <select id="privacyVisibility">
+                            <option value="public">Show my profile in networking</option>
+                            <option value="private">Hide my profile from networking</option>
+                        </select>
+                        <button class="btn btn-primary" onclick="savePrivacySettings()">Save Privacy</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -980,7 +1215,254 @@
         // --- NEW: DYNAMIC JAVASCRIPT BLOCK ---
         
         // Base API URL (THE FIX IS HERE)
-        const API_BASE_URL = 'http://127.0.0.1:5000/api';
+        const API_BASE_URL = `${window.location.origin}/api`;
+        let latestGivingCampaigns = [];
+
+        const escapeHtml = (value = '') => String(value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+
+        const tokenHeaders = () => {
+            const token = localStorage.getItem('alumni_sathi_token');
+            return token ? { 'Authorization': `Bearer ${token}` } : {};
+        };
+
+        const requireLogin = () => {
+            if (!localStorage.getItem('alumni_sathi_token')) {
+                alert('Please log in first to use this action.');
+                openModal();
+                return false;
+            }
+            return true;
+        };
+
+        async function apiRequest(path, options = {}) {
+            const response = await fetch(`${API_BASE_URL}${path}`, {
+                ...options,
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...tokenHeaders(),
+                    ...(options.headers || {})
+                }
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.msg || 'Request failed');
+            }
+            return data;
+        }
+
+        function activateFeaturePanel(panelName) {
+            const normalized = panelName === 'mobile' ? 'privacy' : panelName;
+            const target = normalized === 'events' ? 'events' : normalized;
+            if (target === 'events') {
+                document.getElementById('events').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                return;
+            }
+            document.querySelectorAll('.feature-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.panel === target);
+            });
+            document.querySelectorAll('.workspace-panel').forEach(panel => {
+                panel.classList.toggle('active', panel.id === `panel-${target}`);
+            });
+            document.getElementById('feature-workspace').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function renderCards(containerId, items, renderer, emptyText) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            if (!items || items.length === 0) {
+                container.innerHTML = `<p style="color:white;">${emptyText}</p>`;
+                return;
+            }
+            container.innerHTML = items.map(renderer).join('');
+        }
+
+        async function fetchAndDisplayNetworking() {
+            const items = await apiRequest('/networking');
+            renderCards('networkingList', items, item => `
+                <div class="data-card">
+                    <h3>${escapeHtml(item.fullName)}</h3>
+                    <p><strong>${escapeHtml(item.industry || 'Industry not set')}</strong></p>
+                    <p>${escapeHtml(item.location || 'Location not set')} · Class of ${escapeHtml(item.graduationYear || 'N/A')}</p>
+                    <p>${escapeHtml(item.bio || item.message || 'Open to alumni connections.')}</p>
+                    <div class="tag-row">${(item.interests || []).map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join('')}</div>
+                    <button class="btn btn-secondary" style="margin-top:1rem;" onclick="sendConnection('${escapeHtml(item.fullName)}')">Connect</button>
+                </div>
+            `, 'No alumni profiles found.');
+        }
+
+        async function sendConnection(targetName) {
+            if (!requireLogin()) return;
+            const data = await apiRequest('/networking/connect', {
+                method: 'POST',
+                body: JSON.stringify({ targetName })
+            });
+            alert(data.msg);
+            fetchAndDisplayNotifications();
+        }
+
+        async function fetchAndDisplayKnowledge() {
+            const posts = await apiRequest('/knowledge');
+            renderCards('knowledgeList', posts, post => `
+                <div class="data-card">
+                    <h3>${escapeHtml(post.title)}</h3>
+                    <p><strong>${escapeHtml(post.category)}</strong> · ${escapeHtml(post.author || 'Alumni')}</p>
+                    <p>${escapeHtml(post.content)}</p>
+                    <small>${new Date(post.createdAt).toLocaleDateString()}</small>
+                </div>
+            `, 'No knowledge posts yet.');
+        }
+
+        async function fetchAndDisplayMentorship() {
+            const programs = await apiRequest('/mentorship');
+            renderCards('mentorshipList', programs, item => `
+                <div class="data-card">
+                    <h3>${escapeHtml(item.mentorName)}</h3>
+                    <p><strong>${escapeHtml(item.expertise)}</strong></p>
+                    <p>Available: ${escapeHtml(item.availability)}</p>
+                    <p>${escapeHtml(item.description)}</p>
+                </div>
+            `, 'No mentorship programs yet.');
+        }
+
+        async function fetchAndDisplayAchievements() {
+            const items = await apiRequest('/achievements');
+            renderCards('achievementList', items, item => `
+                <div class="data-card">
+                    <h3>${escapeHtml(item.title)}</h3>
+                    <p><strong>${escapeHtml(item.name)}</strong> · ${escapeHtml(item.year)}</p>
+                    <p>${escapeHtml(item.description)}</p>
+                </div>
+            `, 'No achievements added yet.');
+        }
+
+        async function fetchAndDisplayGiving() {
+            latestGivingCampaigns = await apiRequest('/giving');
+            renderCards('givingList', latestGivingCampaigns, item => {
+                const raised = Number(item.raised || 0);
+                const goal = Number(item.goal || 1);
+                const percent = Math.min(100, Math.round((raised / goal) * 100));
+                return `
+                    <div class="data-card">
+                        <h3>${escapeHtml(item.title)}</h3>
+                        <p>${escapeHtml(item.description)}</p>
+                        <p><strong>Rs. ${raised.toLocaleString('en-IN')}</strong> raised of Rs. ${goal.toLocaleString('en-IN')}</p>
+                        <div style="height:8px; background:rgba(255,255,255,0.18); border-radius:999px; overflow:hidden; margin-top:0.8rem;">
+                            <div style="width:${percent}%; height:100%; background:white;"></div>
+                        </div>
+                    </div>
+                `;
+            }, 'No giving campaigns yet.');
+        }
+
+        async function donateToFirstCampaign() {
+            if (!requireLogin()) return;
+            const amount = document.getElementById('donationAmount').value;
+            if (!amount || Number(amount) <= 0) {
+                alert('Enter a valid donation amount.');
+                return;
+            }
+            const campaign = latestGivingCampaigns[0];
+            const data = await apiRequest(`/giving/${campaign ? campaign._id : 'general'}/donate`, {
+                method: 'POST',
+                body: JSON.stringify({ amount })
+            });
+            alert(data.msg);
+            document.getElementById('donationAmount').value = '';
+            fetchAndDisplayGiving();
+            fetchAndDisplayNotifications();
+        }
+
+        async function fetchAndDisplayNotifications() {
+            const items = await apiRequest('/notifications');
+            renderCards('notificationList', items, item => `
+                <div class="data-card">
+                    <h3>${escapeHtml(item.type || 'update')}</h3>
+                    <p>${escapeHtml(item.message)}</p>
+                    <small>${new Date(item.createdAt).toLocaleString()}</small>
+                </div>
+            `, 'No notifications yet.');
+            const badge = document.querySelector('.notification-badge');
+            if (badge) badge.textContent = items.length;
+        }
+
+        async function saveProfileSettings() {
+            if (!requireLogin()) return;
+            const currentProfile = await apiRequest('/user/profile');
+            const data = await apiRequest('/user/profile', {
+                method: 'PUT',
+                body: JSON.stringify({
+                    fullName: currentProfile.fullName,
+                    graduationYear: currentProfile.graduationYear,
+                    industry: document.getElementById('profileIndustry').value,
+                    location: document.getElementById('profileLocation').value,
+                    interests: document.getElementById('profileInterests').value,
+                    visibility: document.getElementById('profileVisibility').value
+                })
+            });
+            alert(data.msg);
+            fetchAndDisplayNetworking();
+            fetchAndDisplayPrivacy();
+        }
+
+        async function savePrivacySettings() {
+            if (!requireLogin()) return;
+            const currentProfile = await apiRequest('/user/profile');
+            const data = await apiRequest('/user/profile', {
+                method: 'PUT',
+                body: JSON.stringify({
+                    fullName: currentProfile.fullName,
+                    graduationYear: currentProfile.graduationYear,
+                    industry: currentProfile.industry,
+                    location: currentProfile.location,
+                    interests: currentProfile.interests,
+                    visibility: document.getElementById('privacyVisibility').value
+                })
+            });
+            alert(data.msg);
+            fetchAndDisplayPrivacy();
+            fetchAndDisplayNetworking();
+        }
+
+        async function fetchAndDisplayPrivacy() {
+            const container = document.getElementById('privacySummary');
+            try {
+                const profile = await apiRequest('/user/profile');
+                document.getElementById('profileIndustry').value = profile.industry || '';
+                document.getElementById('profileLocation').value = profile.location || '';
+                document.getElementById('profileInterests').value = (profile.interests || []).join(', ');
+                document.getElementById('profileVisibility').value = profile.visibility || 'public';
+                document.getElementById('privacyVisibility').value = profile.visibility || 'public';
+                container.innerHTML = `
+                    <div class="data-card">
+                        <h3>${escapeHtml(profile.fullName)}</h3>
+                        <p>${escapeHtml(profile.email)}</p>
+                        <p>Visibility: <strong>${escapeHtml(profile.visibility)}</strong></p>
+                        <p>Industry: ${escapeHtml(profile.industry)}</p>
+                        <p>Location: ${escapeHtml(profile.location)}</p>
+                    </div>
+                `;
+            } catch (error) {
+                container.innerHTML = '<div class="data-card"><h3>Login Required</h3><p>Log in to manage profile visibility and privacy controls.</p></div>';
+            }
+        }
+
+        async function loadFeatureWorkspace() {
+            await Promise.all([
+                fetchAndDisplayNetworking(),
+                fetchAndDisplayKnowledge(),
+                fetchAndDisplayMentorship(),
+                fetchAndDisplayAchievements(),
+                fetchAndDisplayGiving(),
+                fetchAndDisplayNotifications(),
+                fetchAndDisplayPrivacy()
+            ]);
+            fetchAndDisplayJobs();
+        }
         
         // --- Tab Switching Logic ---
         function showTab(tabId) {
@@ -1037,6 +1519,7 @@
                 userStatusDiv.style.display = 'none';
                 userNameSpan.textContent = '';
             }
+            fetchAndDisplayPrivacy();
         }
         
         // --- Logout Logic ---
@@ -1102,12 +1585,108 @@
                     loginForm.reset();
                     document.getElementById('authModal').classList.remove('visible');
                     await checkAuthStatus();
+                    await loadFeatureWorkspace();
                 } else {
                     alert(`Login Failed: ${data.msg}`);
                 }
             } catch (error) {
                 console.error('Network error:', error);
                 alert('Server connection error during login.');
+            }
+        });
+
+        function showNotifications() {
+            activateFeaturePanel('notifications');
+            fetchAndDisplayNotifications();
+        }
+
+        document.querySelectorAll('.feature-tab').forEach(tab => {
+            tab.addEventListener('click', () => activateFeaturePanel(tab.dataset.panel));
+        });
+
+        document.querySelectorAll('.feature-card[data-feature]').forEach(card => {
+            card.addEventListener('click', () => activateFeaturePanel(card.dataset.feature));
+        });
+
+        document.getElementById('jobPostForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!requireLogin()) return;
+            try {
+                const data = await apiRequest('/jobs', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        title: document.getElementById('jobTitle').value,
+                        company: document.getElementById('jobCompany').value,
+                        location: document.getElementById('jobLocation').value,
+                        description: document.getElementById('jobDescription').value
+                    })
+                });
+                alert(data.msg);
+                e.target.reset();
+                fetchAndDisplayJobs();
+            } catch (error) {
+                alert(error.message);
+            }
+        });
+
+        document.getElementById('knowledgeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!requireLogin()) return;
+            try {
+                const data = await apiRequest('/knowledge', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        title: document.getElementById('knowledgeTitle').value,
+                        category: document.getElementById('knowledgeCategory').value,
+                        content: document.getElementById('knowledgeContent').value
+                    })
+                });
+                alert(data.msg);
+                e.target.reset();
+                fetchAndDisplayKnowledge();
+            } catch (error) {
+                alert(error.message);
+            }
+        });
+
+        document.getElementById('mentorshipForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!requireLogin()) return;
+            try {
+                const data = await apiRequest('/mentorship', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        expertise: document.getElementById('mentorExpertise').value,
+                        availability: document.getElementById('mentorAvailability').value,
+                        description: document.getElementById('mentorDescription').value
+                    })
+                });
+                alert(data.msg);
+                e.target.reset();
+                fetchAndDisplayMentorship();
+            } catch (error) {
+                alert(error.message);
+            }
+        });
+
+        document.getElementById('achievementForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!requireLogin()) return;
+            try {
+                const data = await apiRequest('/achievements', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        name: document.getElementById('achievementName').value,
+                        title: document.getElementById('achievementTitle').value,
+                        year: document.getElementById('achievementYear').value,
+                        description: document.getElementById('achievementDescription').value
+                    })
+                });
+                alert(data.msg);
+                e.target.reset();
+                fetchAndDisplayAchievements();
+            } catch (error) {
+                alert(error.message);
             }
         });
 
@@ -1235,6 +1814,7 @@
             checkAuthStatus(); 
             fetchAndDisplayJobs();
             fetchAndDisplayEvents();
+            loadFeatureWorkspace();
             // Stats observer is now dynamic
             statsObserver.observe(document.querySelector('.stats'));
         });
